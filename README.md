@@ -30,3 +30,9 @@ docker run --name appscanpresence -d lab/appscanpresence<br>
 docker exec -it appscanpresence /bin/bash<br>
 docker start appscanpresence<br>
 docker stop appscanpresence<br>
+
+After run AppScan Presence Container remember: <br>
+1 - the container needs internet access otherwise it will not connect the tunnel with cloud.appscan.com. Documentation: https://help.hcltechsw.com/appscan/ASoC/appseccloud_sys_req.html#appseccloud_sys_req__IPs <br>
+2 - the container need to access the url target, so access the container and run a simple command like curl URLtarget and check if it reachable. 
+https://help.hcltechsw.com/appscan/ASoC/asp_automation_server.html <br>
+3 - the agent does not connect tunnel if in the middle has SSL Inspection, so add exceptions in your network device. <br>
