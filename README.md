@@ -22,6 +22,8 @@ RUN curl -X POST --header 'Accept: application/zip' --header 'Content-Length: 0'
 RUN mkdir /root/AppScanPresence/ && unzip /root/AppScanPresence-Linux_x86_64.zip -d /root/AppScanPresence/
 ENTRYPOINT  ["sh","/root/AppScanPresence/startPresence.sh"]
 ```
+<br>
+PS: It is set to download AppScan Presence V2. If you want V1 change in final of this URL to v1:  https://cloud.appscan.com/api/v2/Presences/$PRESENCEID/Download/Linux_x86_64/v2
 
 Basic Commands:
 
