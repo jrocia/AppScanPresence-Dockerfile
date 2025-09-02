@@ -43,11 +43,11 @@ ENTRYPOINT ["sh", "startPresence.sh"]
 Basic Commands:
 
 ```script  
-docker build --build-arg APIKEYID=xxxxxxxxxxxxxxxx --build-arg APIKEYSECRET=xxxxxxxxxxxxxxxx --build-arg PRESENCEID=xxxxxxxxxxxxxxxx --no-cache -t appscanpresence .
-docker run --name appscanpresence -d appscanpresence<br>
-docker exec -it appscanpresence /bin/bash<br>
-docker start appscanpresence<br>
-docker stop appscanpresence<br>
+docker build --build-arg APIKEYID=xxxx --build-arg APIKEYSECRET=xxxx --build-arg PRESENCEID=xxxx -t appscanpresence .
+docker run --name appscanpresence -d appscanpresence
+docker exec -it appscanpresence /bin/bash
+docker start appscanpresence
+docker stop appscanpresence
 ```
 
 After run AppScan Presence Container remember: <br>
