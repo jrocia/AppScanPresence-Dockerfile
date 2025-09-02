@@ -1,5 +1,5 @@
 # AppScanPresence-Dockerfile
-  Bringing Appscan Presence to run inside container.
+Appscan Presence to run inside container.
 
 If you need to run AppScan Presence inside a container, here the Dockerfile recipe. Fill the 3 ENV (APIKEYID, APIKEYSECRET and PRESENCEID) and build it.
 
