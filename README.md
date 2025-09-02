@@ -41,13 +41,15 @@ ENTRYPOINT ["sh", "startPresence.sh"]
 ```
 <br>
 Basic Commands:
-```bash  
+
+```script  
 docker build --build-arg APIKEYID=xxxxxxxxxxxxxxxx --build-arg APIKEYSECRET=xxxxxxxxxxxxxxxx --build-arg PRESENCEID=xxxxxxxxxxxxxxxx --no-cache -t appscanpresence .
 docker run --name appscanpresence -d appscanpresence<br>
 docker exec -it appscanpresence /bin/bash<br>
 docker start appscanpresence<br>
 docker stop appscanpresence<br>
 ```
+
 After run AppScan Presence Container remember: <br>
 1 - The container needs internet access otherwise it will not connect the tunnel with cloud.appscan.com. Documentation: https://help.hcltechsw.com/appscan/ASoC/appseccloud_sys_req.html#appseccloud_sys_req__IPs <br>
 2 - The container needs to access the url target, so access the container and run a simple command like curl URLtarget and check if it reachable. 
