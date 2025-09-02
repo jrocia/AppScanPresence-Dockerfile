@@ -11,16 +11,33 @@ You must have:<br>
 3 - An AppScan Presence agent where you will get PresenceID. Documentation: https://help.hcltechsw.com/appscan/ASoC/asp_scanning.html<br>
 
 ```Dockerfile  
-FROM registry.access.redhat.com/ubi8/ubi:latest
+FROM registry.access.redhat.com/ubi9/ubi:9.4
 LABEL description="AppScan Presence in Dockerfile for Linux Image"
-ENV APIKEYID xxxxxxxxxxxxxxxxxxxxx
-ENV APIKEYSECRET xxxxxxxxxxxxxxxxxxxxx
-ENV PRESENCEID xxxxxxxxxxxxxxxxxxxxx
-RUN yum install -y unzip && yum clean all
-RUN curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"KeyId":"'"${APIKEYID}"'","KeySecret":"'"${APIKEYSECRET}"'"}' 'https://cloud.appscan.com/api/V2/Account/ApiKeyLogin' > /root/output.txt
-RUN curl -X POST --header 'Accept: application/zip' --header 'Content-Length: 0' --header "Authorization: Bearer $(grep -oP '(?<="Token":")[^"]*' /root/output.txt)" https://cloud.appscan.com/api/v2/Presences/$PRESENCEID/Download/Linux_x86_64/v2 > /root/AppScanPresence-Linux_x86_64.zip
-RUN mkdir /root/AppScanPresence/ && unzip /root/AppScanPresence-Linux_x86_64.zip -d /root/AppScanPresence/
-ENTRYPOINT  ["sh","/root/AppScanPresence/startPresence.sh"]
+ARG APIKEYID
+ARG APIKEYSECRET
+ARG PRESENCEID
+RUN : "${APIKEYID:?build-arg APIKEYID is mandatory}" \
+ && : "${APIKEYSECRET:?build-arg APIKEYSECRET is mandatory}" \
+ && : "${PRESENCEID:?build-arg PRESENCEID is mandatory}"
+RUN yum install -y unzip shadow-utils && yum clean all
+RUN useradd -m -s /sbin/nologin appscanpresence
+WORKDIR /opt/AppScanPresence
+RUN curl -s -X POST \
+    --header 'Content-Type: application/json' \
+    --header 'Accept: application/json' \
+    -d '{"KeyId":"'"${APIKEYID}"'","KeySecret":"'"${APIKEYSECRET}"'"}' \
+    'https://cloud.appscan.com/api/v4/Account/ApiKeyLogin' > /tmp/output.txt \
+ && curl -s -X GET \
+    --header 'Accept: application/zip' \
+    --header 'Content-Length: 0' \
+    --header "Authorization: Bearer $(grep -oP '(?<=\"Token\": \")[^\"]*' /tmp/output.txt)" \
+    "https://cloud.appscan.com/api/v4/Presences/${PRESENCEID}/Download/Linux_x64" \
+    > /tmp/AppScanPresence-Linux_x64.zip \
+ && unzip /tmp/AppScanPresence-Linux_x64.zip -d /opt/AppScanPresence \
+ && rm -f /tmp/output.txt /tmp/AppScanPresence-Linux_x64.zip
+RUN chown -R appscanpresence:appscanpresence /opt/AppScanPresence
+USER appscanpresence
+ENTRYPOINT ["sh", "startPresence.sh"]
 ```
 <br>
 PS: It is set to download AppScan Presence V2. If you want V1 change in final of this URL to v1:  https://cloud.appscan.com/api/v2/Presences/$PRESENCEID/Download/Linux_x86_64/v2 <br>
